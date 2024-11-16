@@ -1,12 +1,15 @@
 from datetime import datetime, timedelta
-from jose import jwt, JWTError
+import jwt  # Using pyjwt library to handle JWT
 from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from pydantic import BaseModel
 from .config import SECRET_KEY, ALGORITHM
 from ..services.user_service import get_user_from_db  # Function to fetch user from the database
-
+# ALGORITHM = "HS256"  # Common and supported algorithm
+# SECRET_KEY = "your_secure_key"
+print(SECRET_KEY, ALGORITHM)
+print("hello")
 # OAuth2PasswordBearer provides a way to retrieve the token from the request
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -30,16 +33,22 @@ class User(BaseModel):
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)):
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    to_encode.update({"exp": expire})  # Adding the expiration to the token
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)  # Using pyjwt.encode to create the token
     return encoded_jwt
 
 # This function decodes the JWT token to extract the payload
 def decode_access_token(token: str):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])  # Using pyjwt.decode to decode the token
         return payload
-    except JWTError:
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except jwt.PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",

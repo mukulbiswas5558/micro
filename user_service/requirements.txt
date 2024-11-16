@@ -4,6 +4,6 @@ httpx==0.23.0           # HTTPX for async HTTP requests
 python-dotenv==1.0.0    # For loading environment variables from a .env file
 asyncpg==0.30.0         # AsyncPG for async database support (PostgreSQL)
 email-validator==2.2.0  # Required for email validation with Pydantic
-python-jose==3.3.0      # For JWT encoding/decoding
-passlib[bcrypt]==1.7.4  # Password hashing library with bcrypt support
+pyjwt
+passlib[bcrypt]
 pydantic==1.10.7        # Data validation and settings management
