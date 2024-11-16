@@ -1,0 +1,5 @@
+# Ignore virtual environments in each service
+**/venv/
+
+# Ignore .env files in each service and at the project root
+**/.env

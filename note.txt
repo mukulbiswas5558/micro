@@ -1,0 +1,89 @@
+project_root/
+├── .gitignore               # Global .gitignore for the entire project
+├── .env                     # Common environment file for the project, ignored by .gitignore
+│
+├── gateway_service/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── routers/
+│   │   │   ├── __init__.py
+│   │   │   └── api_gateway.py
+│   │   └── services/
+│   │       ├── __init__.py
+│   │       ├── user_client.py
+│   │       ├── post_client.py
+│   ├── requirements.txt
+│   └── venv/                # Virtual environment for gateway_service, ignored by .gitignore
+│
+├── user_service/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── database.py
+│   │   ├── routers/
+│   │   │   └── users.py
+│   │   |└── services/
+│   │   |   └── user_service.py
+        |--|utils/
+            auth.py
+        |
+        └── models/
+│   │       └── user_model.py
+│   ├── requirements.txt
+│   └── venv/                # Virtual environment for user_service, ignored by .gitignore
+│
+├── post_service/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   ├── database.py
+│   │   ├── routers/
+│   │   │   └── posts.py
+│   │   └── services/
+│   │       └── post_service.py
+│   ├── requirements.txt
+│   └── venv/        
+
+complete code in all file 
+uvicorn app.main:app --reload --port 8001
+uvicorn post_service.app.main:app --reload --port 8002
+uvicorn gateway_service.app.main:app --host 0.0.0.0 --port 8000 --reload
+http://127.0.0.1:8000/users/1
+# Step 1: Create venv
+python -m venv venv
+
+# Step 2: Activate venv
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+
+# Step 3: Install dependencies
+pip install -r requirements.txt
+pip install python-dotenv
+
+
+
+
+
+{
+  "id": 3,
+  "name": "Alice Johnson",
+  "username": "alicej",
+  "password": "mypassword",
+  "role": "moderator",
+  "status": "inactive",
+  "created_at": "2024-11-15T16:18:06.432004",
+  "updated_at": "2024-11-15T16:18:06.432004"
+}
+CREATE TABLE users (
+    name VARCHAR NOT NULL,
+    username VARCHAR NOT NULL UNIQUE,
+    password VARCHAR NOT NULL,
+    role VARCHAR NOT NULL,
+    status VARCHAR NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
